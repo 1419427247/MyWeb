@@ -2,10 +2,12 @@ var width = window.innerWidth;
 var height = window.innerHeight;
 
 var canvas = document.getElementById('ICanvas');
+
 canvas.width = width;
 canvas.height = height;
 
 var Event = {
+     
 }
 
 function Color(r, g, b, a) {
@@ -39,23 +41,33 @@ function Component(x, y, w, h) {
     this.y = y;
     this.width = w;
     this.heigth = h;
-    this.backgroundcolor = Color(255,14,255,1);
+    this.backgroundcolor = Color(255, 14, 255, 0);
+    this.borad = 5;
+    this.boradcolor = Color(0, 0, 0, 1);
 
-    this.add = function(c){
-        c.x = this.x+c.x;
-        c.y = this.y+c.y;
+    this.add = function (c) {
+        c.x = this.x + c.x;
+        c.y = this.y + c.y;
         children.push(c);
     }
-    
-    this.paint = function(ctx) {
-        ctx.fillStyle = this.backgroundcolor;
-        ctx.fillRect(this.x, this.y, this.width, this.heigth);
+
+    this.paint = function (graphics) {
+        graphics.fillStyle = this.backgroundcolor;
+        graphics.fillRect(this.x, this.y, this.width, this.heigth);
+
+        if (this.borad > 0) {
+            graphics.beginPath();
+            graphics.strokeStyle = this.boradcolor;
+            graphics.lineWidth = this.borad;
+            graphics.rect(this.x, this.y, this.width, this.heigth)
+            graphics.stroke();
+        }
     }
 
-    this.ondraw = function (ctx) {
-        this.paint(ctx);
+    this.ondraw = function (graphics) {
+        this.paint(graphics);
         for (i of children) {
-            i.ondraw(ctx);
+            i.ondraw(graphics);
         }
     };
 }
@@ -64,10 +76,23 @@ function Button(x, y, w, h) {
     var component = new Component(x, y, w, h);
     return component;
 }
+function Lable(x, y, w, h, t) {
+    var component = new Component(x, y, w, h);
+    component.fontcolor = Color(0, 0, 0, 1);
+    component.paint = function (graphics) {
+        graphics.fillStyle = this.backgroundcolor;
+        graphics.fillRect(this.x, this.y, this.width, this.heigth);
+        graphics.fillStyle = component.fontcolor;
+        graphics.fillText(t, this.x + this.width, this.y + this.heigth)
+    }
+    return component;
+}
 
 var frame = new Frame();
-var bg = new Component(55, 55, 500, 500)
-bg.add(new Button(33, 33, 800, 600));
+var bg = new Component(15, 15, width - 15, 1800);
+bg.backgroundcolor = Color(125, 55, 55, 1);
+bg.add(new Button(55, 55, 333, 333));
+bg.add(new Lable(55, 55, 30, 30,"大家好啊"));
 frame.add(bg);
 frame.paint();
 
