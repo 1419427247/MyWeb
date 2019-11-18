@@ -211,7 +211,12 @@ class Frame {
     }
     paint = function () {
         for (var i of this.components) {
-            i.paint(this.graphics);
+            (function(component,graphics) {
+                component.paint(graphics);
+                for (const c of i.children) {
+                    arguments.callee(c,graphics);
+                }
+            })(i,this.graphics);
         }
     }
 }
@@ -224,17 +229,19 @@ class Component {
 
     children = [];
 
-    backgroundcolor = Color(255, 14, 255, 1);
+    color = Color(0, 0, 0, 1);
 
-    borad = 10;
+    backgroundcolor = Color(255, 255, 255, 1);
+
+    borad = 0;
     boradcolor = Color(0, 0, 0, 1);
 
-    shadow = {color:Color(0,0,0,1),offsetx : 4,offsety : 4,blur : 5};
-    constructor(_x, _y, _height, _width) {
+    shadow = {color:Color(0,0,0,1),offsetx : 0,offsety : 0,blur : 0};
+    constructor(_x, _y, _width,_height) {
         this.x = _x;
         this.y = _y;
-        this.height = _height;
         this.width = _width;
+        this.height = _height;
     }
 
     setListener = function(event,fun) {
@@ -263,16 +270,30 @@ class Component {
             graphics.stroke();
         }
 
-        for (i of this.children) {
-            i.paint(graphics);
-        }
+        graphics.fillStyle = this.color;
     }
 }
 
+class Lable extends Component{
+    text = "";
+    textfont="bold 25px Arial"
+    textalign = "center";
+
+    constructor(_x, _y, _width,_height, _text) {
+        super(_x, _y,_width,_height);
+        this.text = _text;
+    }
+    paint(graphics){
+        super.paint(graphics);
+        graphics.textAlign = this.textalign;
+        graphics.font = this.textfont;
+        graphics.fillText(this.text,this.x + this.width/2,this.y+this.height/2,this.width);
+    }
+};
+
+
 var frame = new Frame();
-frame.add(new Component(22, 22, 300, 300).setListener(IEvent.click,function(){
-    alert('QWQ');
-}));
+frame.add(new Lable(50, 50, 300, 100,"你好啊，我的世界"));
 frame.paint();
 
 // context.fillStyle = "rgba(0, 0, 200, 0.5)";
