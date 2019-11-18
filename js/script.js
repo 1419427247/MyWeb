@@ -153,9 +153,33 @@
 // frame.paint();
 
 
-function Color(r, g, b, a) {
-    return "rgba(" + r + "," + g + "," + b + "," + a + ")";
+function Color(red, green, blue, alpha) {
+    return "rgba(" + red + "," + green + "," + blue + "," + alpha + ")";
 };
+
+
+var IEvent = {
+    click : [],
+}
+IEvent.getMousePosition = function(event) {
+    var x = y = 0,
+        doc = document.documentElement,
+        body = document.body;
+    if (!event) event = window.event;
+    if (window.pageYoffset) {
+        x = window.pageXOffset;
+        y = window.pageYOffset;
+    } else {
+        x = (doc && doc.scrollLeft || body && body.scrollLeft || 0)
+            - (doc && doc.clientLeft || body && body.clientLeft || 0);
+        y = (doc && doc.scrollTop || body && body.scrollTop || 0)
+            - (doc && doc.clientTop || body && body.clientTop || 0);
+    }
+    x += event.clientX;
+    y += event.clientY;
+    return [x, y];
+}
+
 
 class Frame {
     width = window.innerWidth;
@@ -167,9 +191,18 @@ class Frame {
         var canvas = document.getElementById('ICanvas');
         canvas.width = this.width;
         canvas.height = this.height;
+        canvas.onclick = function (event) {
+            var mpos = IEvent.getMousePosition(event);
+            for (const i of IEvent.click) {
+                if (mpos[0] > i[0].x && mpos[0] < i[0].x + i[0].width && mpos[1] > i[0].y && mpos[1] < i[0].y + i[0].height) {
+                    i[1]();
+                }
+            }
+        }
+
         this.graphics = canvas.getContext('2d');
     }
-    add(c){
+    add(c) {
         this.components.push(c);
     }
     repaint = function () {
@@ -177,64 +210,69 @@ class Frame {
         this.graphics.fillRect(0, 0, this.width, this.height);
     }
     paint = function () {
-        for (const i of this.components) {
+        for (var i of this.components) {
             i.paint(this.graphics);
         }
-    }
-    getMousePosition(event) {
-        var x = y = 0,
-            doc = document.documentElement,
-            body = document.body;
-        if (!event) event = window.event;
-        if (window.pageYoffset) {
-            x = window.pageXOffset;
-            y = window.pageYOffset;
-        } else {
-            x = (doc && doc.scrollLeft || body && body.scrollLeft || 0)
-                - (doc && doc.clientLeft || body && body.clientLeft || 0);
-            y = (doc && doc.scrollTop || body && body.scrollTop || 0)
-                - (doc && doc.clientTop || body && body.clientTop || 0);
-        }
-        x += event.clientX;
-        y += event.clientY;
-        return [x, y];
     }
 }
 
 class Component {
     x = 0;
     y = 0;
-    height = 0;
     width = 0;
+    height = 0;
+
+    children = [];
 
     backgroundcolor = Color(255, 14, 255, 1);
 
-    borad = 1;
-    boradcolor = Color(255, 0, 0, 1);
+    borad = 10;
+    boradcolor = Color(0, 0, 0, 1);
 
+    shadow = {color:Color(0,0,0,1),offsetx : 4,offsety : 4,blur : 5};
     constructor(_x, _y, _height, _width) {
         this.x = _x;
         this.y = _y;
         this.height = _height;
         this.width = _width;
     }
-    paint(graphics){
+
+    setListener = function(event,fun) {
+        event.push([this,fun]);
+        return this;
+    }
+
+    add(c){
+        children.push(c);
+    }
+
+    paint(graphics) {     
+        graphics.shadowOffsetX = this.shadow.offsetx;
+        graphics.shadowOffsetY = this.shadow.offsety;
+        graphics.shadowColor = this.shadow.color;
+        graphics.shadowBlur = this.shadow.blur; 
+
         graphics.fillStyle = this.backgroundcolor;
-        graphics.fillRect(this.x, this.y, this.width, this.heigth);
-            if (this.borad > 0) {
-                graphics.beginPath();
-                graphics.strokeStyle = this.boradcolor;
-                graphics.lineWidth = this.borad;
-                graphics.rect(this.x, this.y, this.width, this.heigth)
-                graphics.stroke();
-            }
-            console.log(this);
-            
+        graphics.fillRect(this.x, this.y, this.width, this.height);
+
+        if (this.borad > 0) {
+            graphics.beginPath();
+            graphics.strokeStyle = this.boradcolor;
+            graphics.lineWidth = this.borad;
+            graphics.rect(this.x, this.y, this.width, this.height);
+            graphics.stroke();
+        }
+
+        for (i of this.children) {
+            i.paint(graphics);
+        }
     }
 }
 
 var frame = new Frame();
-frame.add(new Component(22,22,300,300));
+frame.add(new Component(22, 22, 300, 300).setListener(IEvent.click,function(){
+    alert('QWQ');
+}));
 frame.paint();
 
 // context.fillStyle = "rgba(0, 0, 200, 0.5)";
