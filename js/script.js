@@ -7,6 +7,11 @@ canvas.width = width;
 canvas.height = height;
 
 
+IEvent = {
+    click = [],
+}
+
+
 function getMousePosition(event) {
     var x = y = 0,
         doc = document.documentElement,
@@ -27,7 +32,11 @@ function getMousePosition(event) {
 }
 
 function onClick(event) {
+    for (const iterator of IEvent.onClick) {
+        
+    }
     console.log(getMousePosition(event));
+
 }
 
 function Color(r, g, b, a) {
@@ -114,6 +123,7 @@ var bg = new Component(0, 0, width, height);
 bg.backgroundcolor = Color(125, 55, 55, 1);
 bg.add(new Button(55, 55, 333, 333));
 bg.add(new Lable(55, 55, 30, 30,"大家好啊"));
+bg.add(new Lable(86, 85, 30, 30,"主机名"));
 frame.add(bg);
 frame.paint();
 
