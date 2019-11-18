@@ -161,6 +161,16 @@ function Color(red, green, blue, alpha) {
 var IEvent = {
     click: [],
 }
+
+var IImage = {
+
+};
+
+IImage["背景"] = new Image();
+IImage["背景"].src = "./img/background.jpg";
+
+
+
 IEvent.getMousePosition = function (event) {
     var x = y = 0,
         doc = document.documentElement,
@@ -203,9 +213,10 @@ class Frame {
                 for (let index = 0; index < component.children.length; index++) {
                     dg(component.children[index]);
                 }
-                if (mpos[0] > component.x && mpos[0] < component.x + component.width && mpos[1] > component.y && mpos[1] < component.y + component.height && component.onclick != null) {
+                if (mpos[0] > component.x && mpos[0] < component.x + component.width && mpos[1] > component.y && mpos[1] < component.y + component.height) {
                     if (!flag) {
-                        component.onclick();
+                        if (component.onclick != null)
+                            component.onclick();
                         flag = !flag;
                     }
                     return;
@@ -293,6 +304,18 @@ class Component {
     }
 }
 
+class Picture extends Component {
+    image = "";
+    constructor(_x, _y, _width, _height, _image) {
+        super(_x, _y, _width, _height);
+        this.image = _image;
+    }
+    paint(graphics) {
+        super.paint(graphics);
+        graphics.drawImage(IImage[this.image],this.x,this.y,this.width,this.height);
+    }
+}
+
 class Lable extends Component {
     text = "";
     textfont = "bold 25px Arial"
@@ -314,16 +337,16 @@ class Link extends Lable {
     constructor(_x, _y, _width, _height, _text) {
         super(_x, _y, _width, _height);
         this.text = _text;
-
-        this.setOnClickListener(function(){
-            window.open(this.text);
+        this.color = Color(0, 0, 225, 1);
+        this.setOnClickListener(function () {
+            window.location.href = this.text;
         });
     }
 }
 
 var frame = new Frame();
 
-var bg = new Component(40, 40, 500, 400);
+var bg = new Component(40, 40, 500, 800);
 bg.backgroundcolor = Color(255, 0, 0, 1);
 bg.setOnClickListener(function () {
     alert("A还能加弹窗");
@@ -337,12 +360,18 @@ lable.setOnClickListener(function () {
 var link = new Link(0, 100, 300, 200, "http://www.baidu.com");
 link.borad = 1;
 
-
+var picture = new Picture(0, 350, 300, 300, "背景");
 
 bg.add(lable);
 bg.add(link);
+bg.add(picture);
+
 frame.add(bg);
-frame.paint();
+
+
+window.onload = function(){
+    frame.paint();
+}
 
 // context.fillStyle = "rgba(0, 0, 200, 0.5)";
 // context.fillRect (0,0,200,200);
