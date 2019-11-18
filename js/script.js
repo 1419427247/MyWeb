@@ -159,9 +159,9 @@ function Color(red, green, blue, alpha) {
 
 
 var IEvent = {
-    click : [],
+    click: [],
 }
-IEvent.getMousePosition = function(event) {
+IEvent.getMousePosition = function (event) {
     var x = y = 0,
         doc = document.documentElement,
         body = document.body;
@@ -180,7 +180,9 @@ IEvent.getMousePosition = function(event) {
     return [x, y];
 }
 
-
+IComponent = {
+    components: [],
+}
 class Frame {
     width = window.innerWidth;
     height = window.innerHeight;
@@ -188,18 +190,32 @@ class Frame {
     graphics = null;
 
     constructor() {
+        IComponent.components = this.components;
+
         var canvas = document.getElementById('ICanvas');
         canvas.width = this.width;
         canvas.height = this.height;
         canvas.onclick = function (event) {
+
             var mpos = IEvent.getMousePosition(event);
-            for (const i of IEvent.click) {
-                if (mpos[0] > i[0].x && mpos[0] < i[0].x + i[0].width && mpos[1] > i[0].y && mpos[1] < i[0].y + i[0].height) {
-                    i[1]();
+            var flag = false;
+            var dg = function (component) {
+                for (let index = 0; index < component.children.length; index++) {
+                    dg(component.children[index]);
                 }
+                if (mpos[0] > component.x && mpos[0] < component.x + component.width && mpos[1] > component.y && mpos[1] < component.y + component.height && component.onclick != null) {
+                    if (!flag) {
+                        component.onclick();
+                        flag = !flag;
+                    }
+                    return;
+                }
+            };
+
+            for (let index = 0; index < IComponent.components.length; index++) {
+                dg(IComponent.components[index]);
             }
         }
-
         this.graphics = canvas.getContext('2d');
     }
     add(c) {
@@ -210,13 +226,15 @@ class Frame {
         this.graphics.fillRect(0, 0, this.width, this.height);
     }
     paint = function () {
+        var dg = function (component, graphics) {
+            component.paint(graphics);
+            for (let index = 0; index < component.children.length; index++) {
+                dg(component.children[index], graphics);
+            }
+        };
+
         for (var i of this.components) {
-            (function(component,graphics) {
-                component.paint(graphics);
-                for (const c of i.children) {
-                    arguments.callee(c,graphics);
-                }
-            })(i,this.graphics);
+            dg(i, this.graphics);
         }
     }
 }
@@ -226,38 +244,39 @@ class Component {
     y = 0;
     width = 0;
     height = 0;
-
     children = [];
-
     color = Color(0, 0, 0, 1);
-
     backgroundcolor = Color(255, 255, 255, 1);
-
     borad = 0;
     boradcolor = Color(0, 0, 0, 1);
 
-    shadow = {color:Color(0,0,0,1),offsetx : 0,offsety : 0,blur : 0};
-    constructor(_x, _y, _width,_height) {
+    onclick = null;
+
+
+    shadow = { color: Color(0, 0, 0, 1), offsetx: 0, offsety: 0, blur: 0 };
+    constructor(_x, _y, _width, _height) {
         this.x = _x;
         this.y = _y;
         this.width = _width;
         this.height = _height;
     }
 
-    setListener = function(event,fun) {
-        event.push([this,fun]);
+    setOnClickListener = function (fun) {
+        this.onclick = fun;
         return this;
     }
 
-    add(c){
-        children.push(c);
+    add(c) {
+        c.x += this.x;
+        c.y += this.y;
+        this.children.push(c);
     }
 
-    paint(graphics) {     
+    paint(graphics) {
         graphics.shadowOffsetX = this.shadow.offsetx;
         graphics.shadowOffsetY = this.shadow.offsety;
         graphics.shadowColor = this.shadow.color;
-        graphics.shadowBlur = this.shadow.blur; 
+        graphics.shadowBlur = this.shadow.blur;
 
         graphics.fillStyle = this.backgroundcolor;
         graphics.fillRect(this.x, this.y, this.width, this.height);
@@ -274,26 +293,55 @@ class Component {
     }
 }
 
-class Lable extends Component{
+class Lable extends Component {
     text = "";
-    textfont="bold 25px Arial"
+    textfont = "bold 25px Arial"
     textalign = "center";
 
-    constructor(_x, _y, _width,_height, _text) {
-        super(_x, _y,_width,_height);
+    constructor(_x, _y, _width, _height, _text) {
+        super(_x, _y, _width, _height);
         this.text = _text;
     }
-    paint(graphics){
+    paint(graphics) {
         super.paint(graphics);
         graphics.textAlign = this.textalign;
         graphics.font = this.textfont;
-        graphics.fillText(this.text,this.x + this.width/2,this.y+this.height/2,this.width);
+        graphics.fillText(this.text, this.x + this.width / 2, this.y + this.height / 2, this.width);
     }
 };
 
+class Link extends Lable {
+    constructor(_x, _y, _width, _height, _text) {
+        super(_x, _y, _width, _height);
+        this.text = _text;
+
+        this.setOnClickListener(function(){
+            window.open(this.text);
+        });
+    }
+}
 
 var frame = new Frame();
-frame.add(new Lable(50, 50, 300, 100,"你好啊，我的世界"));
+
+var bg = new Component(40, 40, 500, 400);
+bg.backgroundcolor = Color(255, 0, 0, 1);
+bg.setOnClickListener(function () {
+    alert("A还能加弹窗");
+});
+
+var lable = new Lable(0, 0, 300, 100, "你好啊，我的世界");
+lable.borad = 2;
+lable.setOnClickListener(function () {
+    alert("B还能加弹窗");
+});
+var link = new Link(0, 100, 300, 200, "http://www.baidu.com");
+link.borad = 1;
+
+
+
+bg.add(lable);
+bg.add(link);
+frame.add(bg);
 frame.paint();
 
 // context.fillStyle = "rgba(0, 0, 200, 0.5)";
