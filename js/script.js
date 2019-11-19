@@ -153,7 +153,7 @@
 // frame.paint();
 
 
-function Color(red, green, blue, alpha) {
+function Color(red, green, blue, alpha = 1) {
     return "rgba(" + red + "," + green + "," + blue + "," + alpha + ")";
 };
 
@@ -191,13 +191,16 @@ IComponent = {
     components: [],
 }
 class Frame {
-    width = window.innerWidth;
-    height = window.innerHeight;
+    width = 0;
+    height = 0;
     components = [];
     graphics = null;
 
-    constructor() {
+    constructor(_width = window.innerWidth,_height = window.innerHeight) {
         IComponent.components = this.components;
+        this.width = _width;
+        this.height = _height;
+
 
         var canvas = document.getElementById('ICanvas');
         canvas.width = this.width;
@@ -299,6 +302,7 @@ class Component {
     backgroundcolor = Color(255, 255, 255, 1);
     borad = 0;
     boradcolor = Color(0, 0, 0, 1);
+    shadow = { color: Color(0, 0, 0, 1), offsetx: 0, offsety: 0, blur: 0 };
 
     memory = {};
 
@@ -307,7 +311,7 @@ class Component {
     onmouseover = null;
     onmouseout = null;
 
-    shadow = { color: Color(0, 0, 0, 1), offsetx: 0, offsety: 0, blur: 0 };
+    parent = null;
     constructor(_x, _y, _width, _height) {
         this.x = _x;
         this.y = _y;
@@ -323,6 +327,7 @@ class Component {
     add(c) {
         c.x += this.x;
         c.y += this.y;
+        c.parent = this;
         this.children.push(c);
     }
 
@@ -345,16 +350,6 @@ class Component {
 
         graphics.fillStyle = this.color;
     }
-
-    onmouseover = function() {
-        console.log("B进来啊");
-    }
-    onmouseout = function() {
-        console.log("B出去啦");
-    }
-    onmousemove = function() {
-        console.log("B移动ing");
-    }
     update() {
 
     }
@@ -370,15 +365,6 @@ class Picture extends Component {
         super.paint(graphics);
         graphics.drawImage(IImage[this.image], this.x, this.y, this.width, this.height);
     }
-    onmouseover = function() {
-        console.log("A进来啊");
-    }
-    onmouseout = function() {
-        console.log("A出去啦");
-    }
-    onmousemove = function() {
-        console.log("A移动ing");
-    }
 }
 
 class Lable extends Component {
@@ -386,7 +372,7 @@ class Lable extends Component {
     textfont = "bold 25px Arial"
     textalign = "center";
 
-    constructor(_x, _y, _width, _height, _text) {
+    constructor(_x, _y, _width, _height, _text ) {
         super(_x, _y, _width, _height);
         this.text = _text;
     }
@@ -399,44 +385,69 @@ class Lable extends Component {
 };
 
 class Link extends Lable {
-    constructor(_x, _y, _width, _height, _text) {
+    src = "";
+    constructor(_x, _y, _width, _height, _text,_src = "#") {
         super(_x, _y, _width, _height);
         this.text = _text;
+        this.src = _src;
         this.color = Color(0, 0, 225, 1);
         this.setOnClickListener(function () {
-            window.location.href = this.text;
+            window.location.href = this.src;
         });
     }
 }
 
-var frame = new Frame();
+var frame = new Frame(undefined,1400);
 
-var bg = new Component(40, 40, 500, 800);
-bg.backgroundcolor = Color(255, 0, 0, 1);
-bg.setOnClickListener(function () {
-    alert("A还能加弹窗");
-});
 
-var lable = new Lable(0, 0, 300, 100, "你好啊，我的世界");
-lable.borad = 2;
-lable.setOnClickListener(function () {
-    alert("B还能加弹窗");
-});
-var link = new Link(0, 100, 300, 200, "http://www.baidu.com");
-link.borad = 1;
+var body = new Picture(0, 0, frame.width, frame.width / 2, "背景");
 
-var picture = new Picture(0, 350, 300, 300, "背景");
+var nav = new Component(frame.width * 0.1, 350, frame.width * 0.8, 80);
+nav.backgroundcolor = Color(255,125,125);
 
-bg.add(lable);
-bg.add(link);
-bg.add(picture);
+var link1 = new Link(nav.width * 0.1,0,nav.width * 0.1,nav.height,"首页");
+var link2 = new Link(nav.width * 0.2,0,nav.width * 0.1,nav.height,"学习要点");
+var link3 = new Link(nav.width * 0.3,0,nav.width * 0.1,nav.height,"不忘初心");
+var link4 = new Link(nav.width * 0.4,0,nav.width * 0.1,nav.height,"牢记使命");
+var link5 = new Link(nav.width * 0.9,0,nav.width * 0.1,nav.height,"关于我的网页");
 
-frame.add(bg);
+link1.textfont = "bold 18px Arial";
+link2.textfont = "bold 18px Arial";
+link3.textfont = "bold 18px Arial";
+link4.textfont = "bold 18px Arial";
+link5.textfont = "bold 18px Arial";
 
+nav.add(link1);
+nav.add(link2);
+nav.add(link3);
+nav.add(link4);
+nav.add(link5);
+
+var main = new Component(frame.width * 0.1, 430, frame.width * 0.8, 870);
+main.backgroundcolor = Color(125,255,125);
+
+var box1 = new Component(0,0,main.width * 0.4,main.height * 0.6);
+box1.backgroundcolor = Color(222,222,222);
+
+main.add(box1);
+
+
+var foot = new Component(frame.width * 0.1, 1300, frame.width * 0.8, 100);
+foot.backgroundcolor = Color(125,125,255);
+
+body.add(nav);
+body.add(main);
+body.add(foot);
+
+frame.add(body);
+
+
+window.onresize = function() {
+    
+}
 
 window.onload = function () {
     this.setInterval(function () {
-        picture.width += 3;
         frame.paint();
     }, 20);
 }
