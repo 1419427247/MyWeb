@@ -158,13 +158,10 @@ function Color(red, green, blue, alpha) {
 };
 
 
-var IEvent = {
-    click: [],
-}
+var IEvent = {};
+IEvent.mouseCompoent = null;
 
-var IImage = {
-
-};
+var IImage = {};
 
 IImage["背景"] = new Image();
 IImage["背景"].src = "./img/background.jpg";
@@ -205,6 +202,8 @@ class Frame {
         var canvas = document.getElementById('ICanvas');
         canvas.width = this.width;
         canvas.height = this.height;
+        this.graphics = canvas.getContext('2d');
+
         canvas.onclick = function (event) {
 
             var mpos = IEvent.getMousePosition(event);
@@ -226,19 +225,59 @@ class Frame {
             for (let index = 0; index < IComponent.components.length; index++) {
                 dg(IComponent.components[index]);
             }
-        }
-        this.graphics = canvas.getContext('2d');
+        };
+
+        canvas.onmousemove = function (event) {
+            var mpos = IEvent.getMousePosition(event);
+            var flag = false;
+            var dg = function (component) {
+                for (let index = 0; index < component.children.length; index++) {
+                    dg(component.children[index]);
+                }
+                if (mpos[0] > component.x && mpos[0] < component.x + component.width && mpos[1] > component.y && mpos[1] < component.y + component.height) {
+                    if (!flag) {
+                        if (IEvent.mouseCompoent == component) {
+                            if (component.onmousemove != null)
+                                component.onmousemove();
+                        } else {
+
+                            if (component.onmouseover != null)
+                                component.onmouseover();
+                            if (IEvent.mouseCompoent != null)
+                                if (IEvent.mouseCompoent.onmouseout != null)
+                                    IEvent.mouseCompoent.onmouseout();
+                            IEvent.mouseCompoent = component;
+                        }
+                        flag = !flag;
+                    }else{
+                        
+                    }
+                    return;
+                }
+            };
+            for (let index = 0; index < IComponent.components.length; index++) {
+                dg(IComponent.components[index]);
+            }
+            if (!flag) {
+                if (IEvent.mouseCompoent != null) {
+                    if (IEvent.mouseCompoent.onmouseout != null)
+                        IEvent.mouseCompoent.onmouseout();
+                    IEvent.mouseCompoent = null;
+                }
+            }
+        };
     }
+
+
+
     add(c) {
         this.components.push(c);
     }
-    repaint = function () {
-        this.graphics.fillStyle = "rgba(255, 255, 255, 1)";
-        this.graphics.fillRect(0, 0, this.width, this.height);
-    }
-    paint = function () {
+    paint() {
+        this.graphics.clearRect(0, 0, this.width, this.height);
         var dg = function (component, graphics) {
             component.paint(graphics);
+            component.update();
             for (let index = 0; index < component.children.length; index++) {
                 dg(component.children[index], graphics);
             }
@@ -261,8 +300,12 @@ class Component {
     borad = 0;
     boradcolor = Color(0, 0, 0, 1);
 
-    onclick = null;
+    memory = {};
 
+    onclick = null;
+    onmousemove = null;
+    onmouseover = null;
+    onmouseout = null;
 
     shadow = { color: Color(0, 0, 0, 1), offsetx: 0, offsety: 0, blur: 0 };
     constructor(_x, _y, _width, _height) {
@@ -302,6 +345,19 @@ class Component {
 
         graphics.fillStyle = this.color;
     }
+
+    onmouseover = function() {
+        console.log("B进来啊");
+    }
+    onmouseout = function() {
+        console.log("B出去啦");
+    }
+    onmousemove = function() {
+        console.log("B移动ing");
+    }
+    update() {
+
+    }
 }
 
 class Picture extends Component {
@@ -312,7 +368,16 @@ class Picture extends Component {
     }
     paint(graphics) {
         super.paint(graphics);
-        graphics.drawImage(IImage[this.image],this.x,this.y,this.width,this.height);
+        graphics.drawImage(IImage[this.image], this.x, this.y, this.width, this.height);
+    }
+    onmouseover = function() {
+        console.log("A进来啊");
+    }
+    onmouseout = function() {
+        console.log("A出去啦");
+    }
+    onmousemove = function() {
+        console.log("A移动ing");
     }
 }
 
@@ -369,9 +434,16 @@ bg.add(picture);
 frame.add(bg);
 
 
-window.onload = function(){
-    frame.paint();
+window.onload = function () {
+    this.setInterval(function () {
+        picture.width += 3;
+        frame.paint();
+    }, 20);
 }
 
+
+// window.onreset = function() {
+//     frame.paint();
+// }
 // context.fillStyle = "rgba(0, 0, 200, 0.5)";
 // context.fillRect (0,0,200,200);
