@@ -5,14 +5,14 @@ var frame = new Frame(undefined,window.screen.width * 0.85);
 
 var body = new Picture(0, 0, frame.width, frame.width / 2, "背景");
 
-var nav = new Component(frame.width * 0.1, frame.width * 0.25, frame.width * 0.8, frame.width * 0.05);
-nav.backgroundcolor = Color(244,222,222);
+var nav = new Component(frame.width * 0.1, frame.width * 0.26, frame.width * 0.8, frame.width * 0.04);
 
 var link1 = new Link(nav.width * 0.1,0,nav.width * 0.1,nav.height,"首页","./index.html");
 var link2 = new Link(nav.width * 0.2,0,nav.width * 0.1,nav.height,"新闻");
 var link3 = new Link(nav.width * 0.3,0,nav.width * 0.1,nav.height,"不忘初心");
 var link4 = new Link(nav.width * 0.4,0,nav.width * 0.1,nav.height,"牢记使命");
-var link5 = new Link(nav.width * 0.9,0,nav.width * 0.1,nav.height,"关于我的网页");
+var link5 = new Link(nav.width * 0.85,0,nav.width * 0.15,nav.height,"关于我的网页","./aboutme.html");
+
 
 link1.textfont = "bold 1em Arial";
 link2.textfont = "bold 1em Arial";
@@ -27,6 +27,7 @@ nav.add(link4);
 nav.add(link5);
 
 var main = new Component(frame.width * 0.1, frame.width * 0.3, frame.width * 0.8,frame.width * 0.5);
+main.backgroundcolor = Color(0,0,0,0);
 main.borad = 1;
 
 var box1 = new Component(0,0,main.width * 0.4,main.height * 0.6);
@@ -35,9 +36,13 @@ box1.backgroundcolor = Color(255,255,255);
 var box1_picture = new Picture(box1.width * 0.05, box1.height * 0.2, box1.width * 0.9, box1.height * 0.6, "习近平");
 box1_picture.shadow = { color: Color(0, 0, 0, 1), offsetx: 5, offsety: 5, blur: 5 };
 box1_picture.onclick = function() {
-    window.open("./news_1.html");
+    window.location.href = "./news_1.html";
 }
+
+var box1_lable = new Lable(box1.width * 0.05, box1.height * 0.85, box1.width * 0.9, box1.height * 0.1, "近平在“不忘初心、牢记使命”主题教育工作会议的重要讲话");
+
 box1.add(box1_picture);
+box1.add(box1_lable);
 
 var box2 = new Component(main.width * 0.4,0,main.width * 0.6,main.height * 0.6);
 box2.backgroundcolor = Color(255,255,255);
@@ -109,5 +114,7 @@ window.onresize = function() {
 window.onload = function () {
     var frame = this.index_view();
     frame.init();
-    frame.paint();
+    setInterval(() => {
+        frame.paint();
+    }, 20);
 }

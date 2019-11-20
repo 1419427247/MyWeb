@@ -315,13 +315,17 @@ class Component {
         this.color = Color(0, 0, 0, 1);
         this.backgroundcolor = Color(255, 255, 255, 1);
         this.borad = 0;
-        this.boradcolor = Color(0, 0, 0, 1);
+        this.boradcolor = Color(0, 0, 0, 0.5);
         this.shadow = { color: Color(0, 0, 0, 1), offsetx: 0, offsety: 0, blur: 0 };
         this.memory = {};
         this.onclick = null;
         this.onmousemove = null;
-        this.onmouseover = null;
-        this.onmouseout = null;
+        this.onmouseover = function() {
+            this.backgroundcolor = Color(200,0,0,0.3);
+        };
+        this.onmouseout = function() {
+            this.backgroundcolor = Color(255,255,255,1);
+        };
         this.parent = null;
     }
 
@@ -390,7 +394,7 @@ class Link extends Lable {
         super(_x, _y, _width, _height);
         this.text = _text;
         this.src = _src;
-        this.color = Color(0, 0, 225, 1);
+        this.color = Color(225, 0, 0, 1);
         this.setOnClickListener(function () {
             window.location.href = this.src;
         });
