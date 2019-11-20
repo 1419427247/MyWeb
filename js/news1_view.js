@@ -87,5 +87,5 @@ function index_view(){
         frame.init();
         setInterval(() => {
             frame.paint();
-        }, 20);
+        }, 50);
     }

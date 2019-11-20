@@ -116,5 +116,5 @@ window.onload = function () {
     frame.init();
     setInterval(() => {
         frame.paint();
-    }, 20);
+    }, 50);
 }
