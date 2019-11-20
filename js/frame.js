@@ -166,12 +166,15 @@ var IImage = {};
 IImage["背景"] = new Image();
 IImage["背景"].src = "./img/background.jpg";
 
+IImage["习近平"]= new Image();
+IImage["习近平"].src = "./img/xjp.jpg";
 
 
 IEvent.getMousePosition = function (event) {
-    var x = y = 0,
-        doc = document.documentElement,
-        body = document.body;
+    var x = 0;
+    var y = 0;
+    var doc = document.documentElement;
+    var body = document.body;
     if (!event) event = window.event;
     if (window.pageYoffset) {
         x = window.pageXOffset;
@@ -187,16 +190,12 @@ IEvent.getMousePosition = function (event) {
     return [x, y];
 }
 
-IComponent = {
-    components: [],
-}
-class Frame {
-    width = 0;
-    height = 0;
-    components = [];
-    graphics = null;
+var IComponent = {};
+IComponent.components = [];
 
-    constructor(_width = window.innerWidth,_height = window.innerHeight) {
+class Frame {
+    constructor(_width = window.screen.width,_height = window.screen.width) {
+        this.components = [];
         IComponent.components = this.components;
         this.width = _width;
         this.height = _height;
@@ -270,15 +269,13 @@ class Frame {
             }
         };
     }
-
-
-
     add(c) {
         this.components.push(c);
     }
     paint() {
         this.graphics.clearRect(0, 0, this.width, this.height);
         var dg = function (component, graphics) {
+
             component.paint(graphics);
             component.update();
             for (let index = 0; index < component.children.length; index++) {
@@ -290,33 +287,42 @@ class Frame {
             dg(i, this.graphics);
         }
     }
+    init(){
+        var tfun = function (component) {
+            if (component.parent != null) {
+                component.x += component.parent.x;
+                component.y += component.parent.y;
+            }
+            for (let index = 0; index < component.children.length; index++) {
+                tfun(component.children[index]);
+            }
+        };
+
+        for (var i of this.components) {
+            tfun(i);
+        }
+    }
 }
 
 class Component {
-    x = 0;
-    y = 0;
-    width = 0;
-    height = 0;
-    children = [];
-    color = Color(0, 0, 0, 1);
-    backgroundcolor = Color(255, 255, 255, 1);
-    borad = 0;
-    boradcolor = Color(0, 0, 0, 1);
-    shadow = { color: Color(0, 0, 0, 1), offsetx: 0, offsety: 0, blur: 0 };
-
-    memory = {};
-
-    onclick = null;
-    onmousemove = null;
-    onmouseover = null;
-    onmouseout = null;
-
-    parent = null;
     constructor(_x, _y, _width, _height) {
         this.x = _x;
         this.y = _y;
         this.width = _width;
         this.height = _height;
+
+        this.children = [];
+        this.color = Color(0, 0, 0, 1);
+        this.backgroundcolor = Color(255, 255, 255, 1);
+        this.borad = 0;
+        this.boradcolor = Color(0, 0, 0, 1);
+        this.shadow = { color: Color(0, 0, 0, 1), offsetx: 0, offsety: 0, blur: 0 };
+        this.memory = {};
+        this.onclick = null;
+        this.onmousemove = null;
+        this.onmouseover = null;
+        this.onmouseout = null;
+        this.parent = null;
     }
 
     setOnClickListener = function (fun) {
@@ -325,8 +331,6 @@ class Component {
     }
 
     add(c) {
-        c.x += this.x;
-        c.y += this.y;
         c.parent = this;
         this.children.push(c);
     }
@@ -356,7 +360,6 @@ class Component {
 }
 
 class Picture extends Component {
-    image = "";
     constructor(_x, _y, _width, _height, _image) {
         super(_x, _y, _width, _height);
         this.image = _image;
@@ -368,13 +371,11 @@ class Picture extends Component {
 }
 
 class Lable extends Component {
-    text = "";
-    textfont = "bold 25px Arial"
-    textalign = "center";
-
     constructor(_x, _y, _width, _height, _text ) {
         super(_x, _y, _width, _height);
         this.text = _text;
+        this.textfont = "bold 1em Arial"
+        this.textalign = "center";
     }
     paint(graphics) {
         super.paint(graphics);
@@ -385,7 +386,6 @@ class Lable extends Component {
 };
 
 class Link extends Lable {
-    src = "";
     constructor(_x, _y, _width, _height, _text,_src = "#") {
         super(_x, _y, _width, _height);
         this.text = _text;
@@ -396,65 +396,3 @@ class Link extends Lable {
         });
     }
 }
-
-var frame = new Frame(undefined,1400);
-
-
-var body = new Picture(0, 0, frame.width, frame.width / 2, "背景");
-
-var nav = new Component(frame.width * 0.1, 350, frame.width * 0.8, 80);
-nav.backgroundcolor = Color(255,125,125);
-
-var link1 = new Link(nav.width * 0.1,0,nav.width * 0.1,nav.height,"首页");
-var link2 = new Link(nav.width * 0.2,0,nav.width * 0.1,nav.height,"学习要点");
-var link3 = new Link(nav.width * 0.3,0,nav.width * 0.1,nav.height,"不忘初心");
-var link4 = new Link(nav.width * 0.4,0,nav.width * 0.1,nav.height,"牢记使命");
-var link5 = new Link(nav.width * 0.9,0,nav.width * 0.1,nav.height,"关于我的网页");
-
-link1.textfont = "bold 18px Arial";
-link2.textfont = "bold 18px Arial";
-link3.textfont = "bold 18px Arial";
-link4.textfont = "bold 18px Arial";
-link5.textfont = "bold 18px Arial";
-
-nav.add(link1);
-nav.add(link2);
-nav.add(link3);
-nav.add(link4);
-nav.add(link5);
-
-var main = new Component(frame.width * 0.1, 430, frame.width * 0.8, 870);
-main.backgroundcolor = Color(125,255,125);
-
-var box1 = new Component(0,0,main.width * 0.4,main.height * 0.6);
-box1.backgroundcolor = Color(222,222,222);
-
-main.add(box1);
-
-
-var foot = new Component(frame.width * 0.1, 1300, frame.width * 0.8, 100);
-foot.backgroundcolor = Color(125,125,255);
-
-body.add(nav);
-body.add(main);
-body.add(foot);
-
-frame.add(body);
-
-
-window.onresize = function() {
-    
-}
-
-window.onload = function () {
-    this.setInterval(function () {
-        frame.paint();
-    }, 20);
-}
-
-
-// window.onreset = function() {
-//     frame.paint();
-// }
-// context.fillStyle = "rgba(0, 0, 200, 0.5)";
-// context.fillRect (0,0,200,200);
