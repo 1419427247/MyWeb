@@ -28,8 +28,12 @@ function index_view(){
     var main = new Component(frame.width * 0.1, frame.width * 0.3, frame.width * 0.8,frame.width * 0.5);
     main.borad = 3;
     
-    var lable1 = new Lable(0,main.height * 0.1,main.width,main.height * 0.15,"被发现啦╰(￣ω￣ｏ)，还有这个网页bug太多了（；´д｀）ゞ");
+    var lable1 = new Lable(0,main.height * 0.1,main.width,main.height * 0.15,"被发现啦╰(￣ω￣ｏ)，还有这个网页bug太多了（；´д｀）ゞ，点我看被废弃的网页");
     lable1.color = Color(0,0,0,0);
+    lable1.setOnClickListener(function(){
+        window.open("./old/bad_index.html");
+    });
+
     var lable2 = new Lable(0,main.height * 0.3,main.width,main.height * 0.1,"它真的太棒啦，可惜时间不够，本来可以更棒的（＞人＜；）");
     var i = 0;
     lable2.onmousemove = function() {
@@ -44,7 +48,7 @@ function index_view(){
     var foot = new Component(frame.width * 0.1, frame.width * 0.8, frame.width * 0.8, frame.width * 0.05);
     foot.backgroundcolor = Color(255,255,255);
     
-    var foot_ipad = new Lable(0,0,foot.width,foot.height,"ipad水晶，版权所有")
+    var foot_ipad = new Lable(0,0,foot.width,foot.height,"不忘初心，牢记使命 © 2019 ipad水晶，版权所有")
     
     foot.add(foot_ipad);
     

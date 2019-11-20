@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
+    <meta name='apple-mobile-web-app-capable' content='yes'>
+    <meta name='apple-mobile-web-app-status-bar-style' content='black'>
+    <meta name='format-detection' content='telephone=no'>
+    <table style="width:100%;font-size:1.1em">
+
+        <link rel="stylesheet" href="css/style.css">
+        <script src="js/jquery-3.4.1.min.js"></script>
+        <title>被废弃的，用来凑数O(∩_∩)O</title>
+        <style>
+            #bg{
+                width: 100%;
+                height: 1280px;
+                background:url('img/background.jpg') no-repeat top center;
+            }
+
+            #news_list {
+                position: relative;
+                width: 100%;
+                height: 30%;
+                overflow: hidden;
+            }
+
+            #arrow_left {
+                position: absolute;
+                width: 5%;
+                height: 100%;
+                background-image: url('../img/arrow.png') no-repeat;
+                background: #d40e0e;
+
+            }
+
+            #arrow_right {
+                position: absolute;
+                width: 5%;
+                height: 100%;
+                left: 95%;
+                background-image: url('../img/arrow.png') no-repeat;
+                background: #d40e0e;
+                transform: rotate(180deg);
+            }
+
+            #news_list a {
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                width: 100%;
+                height: 100%;
+                padding-top: 2%;
+                text-align: center;
+            }
+
+            #news_list a img {
+                width: 80%;
+                height: 80%;
+            }
+
+            #main_m {
+                width: 100%;
+                height: 500px;
+                background-color: beige;
+            }
+
+            #main_m #list_r {
+                width: 60%;
+                height: 100%;
+                background-color: blue;
+                border: 3px solid black;
+                float: right;
+            }
+
+            #main_m #list_l {
+                width: 40%;
+                height: 100%;
+                background-color: tomato;
+                border: 3px solid black;
+
+            }
+
+            #main_b {
+                width: 100%;
+                height: 600px;
+                background-color: darkcyan;
+                border: 3px solid black;
+
+            }
+        </style>
+        <script>
+
+            $(document).ready(function () {
+                (function () {
+                    var list = $('#news_list > a');
+                    var list_length = list.length;
+                    var i = 0;
+                    var s = false;
+                    for (index = 1; index < list_length; index++)
+                        $(list[index]).css('left', $('#news_list').css('width'));
+                    setInterval(function () {
+                        i++;
+                        if (i == list_length)
+                            i = 0;
+                        if (i == 0)
+                            $(list[list_length - 1]).animate({
+                                'left': '-' + $('#news_list').css('width')
+                            }, "normal", null, function () {
+                                $(list[list_length - 1]).css('left', $('#news_list').css('width'));
+                            });
+                        else
+                            $(list[i - 1]).animate({
+                                'left': '-' + $('#news_list').css('width')
+                            }, "normal", null, function () {
+                                $(list[i - 1]).css('left', $('#news_list').css('width'));
+                            });
+                        $(list[i]).animate({
+                            'left': 0
+                        });
+                    }, 5000);
+                })();
+                (function () {
+
+                })();
+
+            });
+        </script>
+</head>
+
+<body>
+    <div id="bg">
+        <main>
+            <nav>
+                <a href="index.html"><strong>首页</strong></a>
+                <a href="#"><strong>学习平台</strong></a>
+                <a href="#"><strong>要闻播报</strong></a>
+                <a href="#"><strong>评论解读</strong></a>
+                <a href="#"><strong>学习教育</strong></a>
+                <a href="#"><strong>调查研究</strong></a>
+                <a href="#"><strong>检视问题</strong></a>
+                <a href="#"><strong>整改落实</strong></a>
+                <a href="#"><strong>先进典型</strong></a>
+                <a href="#"><strong>互动交流</strong></a>
+                <a href="#"><strong>学习资料</strong></a>
+            </nav>
+            <div id="news_list">
+                <a href="#1"><img src="img/1.jpg" alt="#"></a>
+                <a href="#2"><img src="img/2.jpg" alt="#"></a>
+                <a href="#3"><img src="img/3.jpg" alt="#"></a>
+                <div id='arrow_left'>
+
+                </div>
+                <div id='arrow_right'>
+
+                </div>
+            </div>
+
+            <div id="main_m">
+                <div id="list_r"></div>
+                <div id="list_l"></div>
+            </div>
+            <div id="main_b">
+                <h1><strong>中国共产党人的初心和使命是什么？</strong></h1>
+                <p>十九大报告中，习近平总书记开宗明义，强调了共产党人的初心和使命——“为中国人民谋幸福，为中华民族谋复兴”。</p>
+                <hr color="black">
+                <h1><strong>“不忘初心，牢记使命”是怎么来的呢？</strong></h1>
+                <p>2015年7月1日，习近平总书记给国测一大队老队员老党员的回信首次提出“不忘初心，方得始终”。2016年7月1日，总书记在纪念中国共产党成立95周年大会上向全党郑重发出“不忘初心、继续前进”的号召。2017年10月18日，在党的十九大上，“不忘初心、牢记使命”上升为大会的主题，总书记深刻指出：“这个初心和使命是激励中国共产党人不断前进的根本动力”，并部署“在全党开展‘不忘初心、牢记使命’主题教育”。
+                    此后，习近平总书记在多个场合进一步强调“不忘初心，牢记使命”</p>
+            </div>
+
+        </main>
+        <footer>
+            <div>
+                <img src="./img/footer.png" alt="#">
+                <p>不忘初心，牢记使命 © 2019 iPad水晶 版权所有</p>
+            </div>
+        </footer>
+    </div>
+</body>
+
+</html>

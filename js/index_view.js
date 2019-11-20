@@ -93,7 +93,7 @@ main.add(box3);
 var foot = new Component(frame.width * 0.1, frame.width * 0.8, frame.width * 0.8, frame.width * 0.05);
 foot.backgroundcolor = Color(255,255,255);
 
-var foot_ipad = new Lable(0,0,foot.width,foot.height,"ipad水晶，版权所有")
+var foot_ipad = new Lable(0,0,foot.width,foot.height,"不忘初心，牢记使命 © 2019 ipad水晶，版权所有")
 
 foot.add(foot_ipad);
 
@@ -116,5 +116,5 @@ window.onload = function () {
     frame.init();
     setInterval(() => {
         frame.paint();
-    }, 50);
+    }, 20);
 }
