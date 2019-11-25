@@ -11,8 +11,9 @@ IEvent.onClick = function (event) {
                 return true;
         }
         if (mpos[0] > component.x && mpos[0] < component.x + component.width && mpos[1] > component.y && mpos[1] < component.y + component.height) {
-            if (component.onclick != null)
-                component.onclick();
+            for (let index = 0; index < component.onclick.length; index++) {
+                component.onclick[index](component);
+            }
             return true;
         }
         return false
@@ -34,14 +35,18 @@ IEvent.onMouseMove = function () {
         }
         if (mpos[0] > component.x && mpos[0] < component.x + component.width && mpos[1] > component.y && mpos[1] < component.y + component.height) {
             if (component != IEvent.mouseComponent) {
-                if (IEvent.mouseComponent != null)
-                    if (IEvent.mouseComponent.onmouseout != null)
-                        IEvent.mouseComponent.onmouseout();
-                if (component.onmouseover != null)
-                    component.onmouseover();
+                if (IEvent.mouseComponent != null){
+                    for (let index = 0; index < IEvent.mouseComponent.onmouseout.length; index++) {
+                        IEvent.mouseComponent.onmouseout[index](component);
+                    }
+                }
+                for (let index = 0; index < component.onmouseover.length; index++) {
+                    component.onmouseover[index](component);
+                }
             }
-            if (component.onmousemove != null)
-                component.onmousemove();
+            for (let index = 0; index < component.onmousemove.length; index++) {
+                component.onmousemove[index](component);
+            }
             IEvent.mouseComponent = component;
             return true;
         }
@@ -55,9 +60,11 @@ IEvent.onMouseMove = function () {
     }
 
     if (!flat) {
-        if (IEvent.mouseComponent != null)
-            if (IEvent.mouseComponent.onmouseout != null)
-                IEvent.mouseComponent.onmouseout();
+        if (IEvent.mouseComponent != null){
+            for (let index = 0; index < component.onmouseout.length; index++) {
+                component.onmouseout[index](component);
+            }
+        }
         IEvent.mouseComponent = null;
     }
 
@@ -127,7 +134,7 @@ class IFont {
 class IAnimation{
     constructor(_component,_fun){
         if(_component.animation != null){
-            _component.animation.remove();
+            _component.animation.cancel();
         }
 
         this.flat = false;
@@ -137,7 +144,7 @@ class IAnimation{
         }
         , 20);
     }
-    remove(){
+    cancel(){
         clearInterval(this.id);
     }
 }
@@ -266,22 +273,29 @@ class IComponentBox{
     }
     onclick (_onclick){
         for (let index = 0; index < this.array.length; index++) {
-            this.array[index].onclick = _onclick;
+            this.array[index].addEventListener(this.array[index].onclick,_onclick);
         }
     }
     onmousemove (_onmousemove){
         for (let index = 0; index < this.array.length; index++) {
-            this.array[index].onmousemove = _onmousemove;
+            this.array[index].addEventListener(this.array[index].onmousemove,_onmousemove);
         }
     }
     onmouseover (_onmouseover){
         for (let index = 0; index < this.array.length; index++) {
-            this.array[index].onmouseover = _onmouseover;
+            this.array[index].addEventListener(this.array[index].onmouseover,_onmouseover);
+
         }
     }
     onmouseout (_onmouseout){
         for (let index = 0; index < this.array.length; index++) {
-            this.array[index].onmouseout = _onmouseout;
+            this.array[index].addEventListener(this.array[index].onmouseout,_onmouseout);
+        }
+    }
+
+    font(_font){
+        for (let index = 0; index < this.array.length; index++) {
+            this.array[index].font = _font;
         }
     }
 }
@@ -298,7 +312,7 @@ class IComponent {
         this.width = _width;
         this.height = _height;
 
-        this.backgroundcolor = null;
+        this.backgroundcolor = new IColor(255,255,255,1);
         this.borad = null;
         this.shadow = null;
 
@@ -306,11 +320,11 @@ class IComponent {
 
         this.enabled = true;
 
-        this.onclick = null;
+        this.onclick = [];
 
-        this.onmousemove = null;
-        this.onmouseover = null;
-        this.onmouseout = null;
+        this.onmousemove = [];
+        this.onmouseover = [];
+        this.onmouseout = [];
 
         this.memory = {};
         this.parent = null;
@@ -323,11 +337,15 @@ class IComponent {
         this.children.push(_component);
     }
 
+    addEventListener(_type,_fun){
+        _type.push(_fun);
+    }
+
     repaint(_component) {
         if (_component == undefined)
             this.parent.repaint(this.parent);
         else {
-            this.parent.repaint(_component);
+            this.parent.repaint(_component.parent);
         }
     }
 
@@ -431,7 +449,7 @@ class IComponent {
 
 
 class ILable extends IComponent {
-    constructor(_x, _y, _width, _height, _text, _lineheight, _font = new IFont("bold", "1.2em", "宋体"), _color = new IColor(0, 0, 0, 1)) {
+    constructor(_x, _y, _width, _height, _text, _lineheight, _font = new IFont("bold", "1.2vw", "宋体"), _color = new IColor(0, 0, 0, 1)) {
         super(_x, _y, _width, _height);
         this.tag = "ILable";
         this.text = _text;
@@ -439,7 +457,6 @@ class ILable extends IComponent {
         this.color = _color;
         this.lineheight = _lineheight;
     }
-
 
     paint(graphics) {
         super.paint(graphics);
@@ -495,9 +512,9 @@ class ILink extends ILable {
         this.tag = "ILink";
         this.src = _src;
         this.color = new IColor(225, 0, 0, 1);
-        this.onclick = ()=> {
+        this.addEventListener(this.onclick,()=> {
             window.location.href = this.src;
-        };
+        });
     }
 }
 

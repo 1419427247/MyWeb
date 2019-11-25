@@ -1,21 +1,19 @@
 
     var body = new IPicture(0, 0, 100 , 50, "背景");
     
-    var nav = new IComponent(15,40,70,8);
-    nav.backgroundcolor = new IColor(255,255,255,1);
-    var ILink1 = new ILink(10,0, 10,100,"首页",15,"./index.html");
-    var ILink2 = new ILink(20,0, 10,100,"新闻",15);
-    var ILink3 = new ILink(30,0, 10,100,"不忘初心",15);
-    var ILink4 = new ILink(40,0, 10,100,"牢记使命",15);
-    var ILink5 = new ILink(85,0, 15,100,"关于我的网页",15,"./aboutme.html");
-    
-    
+    var nav = new IComponent(15,40,70,6);
+    nav.backgroundcolor = new IColor(255,255,255,0.8);
+    var link1 = new ILink(10,0, 10,100,"首页",25,"./index.html");
+    var link2 = new ILink(20,0, 10,100,"新闻",25);
+    var link3 = new ILink(30,0, 10,100,"不忘初心",25);
+    var link4 = new ILink(40,0, 10,100,"牢记使命",25);
+    var link5 = new ILink(85,0, 15,100,"关于我的网页",25,"./aboutme.html");
 
-    nav.add(ILink1);
-    nav.add(ILink2);
-    nav.add(ILink3);
-    nav.add(ILink4);
-    nav.add(ILink5);
+    nav.add(link1);
+    nav.add(link2);
+    nav.add(link3);
+    nav.add(link4);
+    nav.add(link5);
     
     // var main = new IComponent(IFrame.width * 0.1, IFrame.width * 0.3, IFrame.width * 0.8,IFrame.width * 0.5);
     
@@ -42,5 +40,10 @@
         IFrame.show();
     }
 
-    IFrame.getComponentByTag("ILink").backgroundcolor(new IColor(122,22,22,1));
+    IFrame.getComponentByTag("ILink").font(new IFont("bold","1.2vw","宋体"));
+    IFrame.getComponentByTag("ILink").onclick((_component)=>{
+        _component.animation = new IAnimation(_component,()=>{
+            _component.backgroundcolor.red--;
+        });
+    });
     //IFrame.repaint(IFrame);
