@@ -124,6 +124,24 @@ class IFont {
     }
 }
 
+class IAnimation{
+    constructor(_component,_fun){
+        if(_component.animation != null){
+            _component.animation.remove();
+        }
+
+        this.flat = false;
+        this.id = setInterval(()=>{ 
+            _fun(_component,this);
+            _component.repaint();
+        }
+        , 20);
+    }
+    remove(){
+        clearInterval(this.id);
+    }
+}
+
 
 var IFrame = {
     x: 0,
@@ -163,7 +181,7 @@ IFrame.getComponentById = function(_id) {
 IFrame.getComponentByTag = function(_tag) {
     var box = new IComponentBox();
     var dg = function (_component) {
-        if(_component.tag = _tag)
+        if(_component.tag == _tag)
             box.array.push(_component);
         for (let _index = 0; _index < _component.children.length; _index++) {
             dg(_component.children[_index]);
@@ -222,48 +240,48 @@ class IComponentBox{
     }
 
     backgroundcolor(_backgroundcolor){
-        for (i of this.array) {
-            i.backgroundcolor = _backgroundcolor;
+        for (let index = 0; index < this.array.length; index++) {
+            this.array[index].backgroundcolor = _backgroundcolor;
         }
     }
     borad (_borad){
-        for (i of this.array) {
-            i.borad = _borad;
+        for (let index = 0; index < this.array.length; index++) {
+            this.array[index].borad = _borad;
         }
     }
     shadow (_shadow){
-        for (i of this.array) {
-            i.shadow = _shadow;
+        for (let index = 0; index < this.array.length; index++) {
+            this.array[index].shadow = _shadows;
         }
     }
     animation (_animation){
-        for (i of this.array) {
-            i.animation = _animation;
+        for (let index = 0; index < this.array.length; index++) {
+            this.array[index].animation = _animation;
         }
     }
     enabled (_enabled){
-        for (i of this.array) {
-            i.enabled = _enabled;
+        for (let index = 0; index < this.array.length; index++) {
+            this.array[index].enabled = _enabled;
         }
     }
     onclick (_onclick){
-        for (i of this.array) {
-            i.onclick = _onclick;
+        for (let index = 0; index < this.array.length; index++) {
+            this.array[index].onclick = _onclick;
         }
     }
     onmousemove (_onmousemove){
-        for (i of this.array) {
-            i.onmousemove = _onmousemove;
+        for (let index = 0; index < this.array.length; index++) {
+            this.array[index].onmousemove = _onmousemove;
         }
     }
     onmouseover (_onmouseover){
-        for (i of this.array) {
-            i.onmouseover = _onmouseover;
+        for (let index = 0; index < this.array.length; index++) {
+            this.array[index].onmouseover = _onmouseover;
         }
     }
     onmouseout (_onmouseout){
-        for (i of this.array) {
-            i.onmouseout = _onmouseout;
+        for (let index = 0; index < this.array.length; index++) {
+            this.array[index].onmouseout = _onmouseout;
         }
     }
 }
@@ -307,7 +325,7 @@ class IComponent {
 
     repaint(_component) {
         if (_component == undefined)
-            this.parent.repaint(this);
+            this.parent.repaint(this.parent);
         else {
             this.parent.repaint(_component);
         }
@@ -427,7 +445,7 @@ class ILable extends IComponent {
         super.paint(graphics);
         graphics.fillStyle = this.color.getColor();
         graphics.font = this.font.getFont();
-        graphics.textBaseline = "bottom";
+        graphics.textBaseline = "top";
         //graphics.fillText(this.text, this.x, this.y, this.width);
 
         var temp = "";
@@ -456,7 +474,7 @@ class IPicture extends IComponent {
 
     paint(graphics) {
         super.paint(graphics);
-        graphics.drawImage(this.image, this.x, this.y, this.width, this.width);
+        graphics.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
 }
 
@@ -488,20 +506,38 @@ class ILink extends ILable {
 IPicture.set("背景", "./img/background.jpg")
 
 
-window.onload = () => {
-    var c1 = new ILink(5, 5, 50, 15, "       背景啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊", 20,"http://baidu.com");
-    c1.backgroundcolor = new IColor(255, 123, 123, 0.5);
-    c1.borad = new IBorad(1,5,5,5);
-    c1.borad.right_color = new IColor(255,123,2,1);
+// window.onload = () => {
+//     var c1 = new ILink(5, 5, 50, 15, "       背景啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊", 20,"http://baidu.com");
+//     c1.backgroundcolor = new IColor(255, 123, 123, 0.5);
+//     c1.borad = new IBorad(1,5,5,5);
+//     c1.borad.right_color = new IColor(255,123,2,1);
 
-    IFrame.add(c1);
-    IFrame.add(new ILink(25,25,12,12,"QWQ",5,"QWQ"));
+//     c1.onmouseover = ()=>{
+//         c1.animation = new IAnimation(c1,(_component,_animation)=>{
+//             _component.width++;
+//         });
+//     };
 
-    IFrame.show();
+
+//     c1.onmouseout = ()=>{
+
+//         c1.animation = new IAnimation(c1,(_component,_animation)=>{
+//             if(_component.width > 100)
+//                 _component.borad.bottom++;
+//             else
+//                 _animation.remove();
+//         });
+//         IFrame.repaint(IFrame);
+//     }
 
 
-    console.log(IFrame.getComponentByTag("ILink"));
-}
+
+//     IFrame.add(c1);
+//     IFrame.add(new ILink(25,25,12,12,"QWQ",5,"QWQ"));
+
+//     IFrame.show();
+//     console.log(IFrame.getComponentByTag("ILink"));
+// }
 
 
 
