@@ -13,6 +13,7 @@ IEvent.onClick = function (event) {
         if (mpos[0] > component.x && mpos[0] < component.x + component.width && mpos[1] > component.y && mpos[1] < component.y + component.height) {
             for (let index = 0; index < component.onclick.length; index++) {
                 component.onclick[index](component);
+                
             }
             return true;
         }
@@ -37,7 +38,7 @@ IEvent.onMouseMove = function () {
             if (component != IEvent.mouseComponent) {
                 if (IEvent.mouseComponent != null){
                     for (let index = 0; index < IEvent.mouseComponent.onmouseout.length; index++) {
-                        IEvent.mouseComponent.onmouseout[index](component);
+                        IEvent.mouseComponent.onmouseout[index](IEvent.mouseComponent);
                     }
                 }
                 for (let index = 0; index < component.onmouseover.length; index++) {
@@ -58,11 +59,10 @@ IEvent.onMouseMove = function () {
         if (flat)
             return;
     }
-
     if (!flat) {
         if (IEvent.mouseComponent != null){
-            for (let index = 0; index < component.onmouseout.length; index++) {
-                component.onmouseout[index](component);
+            for (let index = 0; index < IEvent.mouseComponent.onmouseout.length; index++) {
+                IEvent.mouseComponent.onmouseout[index](IEvent.mouseComponent);
             }
         }
         IEvent.mouseComponent = null;
@@ -133,18 +133,15 @@ class IFont {
 
 class IAnimation{
     constructor(_component,_fun){
-        if(_component.animation != null){
-            _component.animation.cancel();
-        }
-
-        this.flat = false;
         this.id = setInterval(()=>{ 
             _fun(_component,this);
             _component.repaint();
         }
         , 20);
+        this.flat = true;
     }
     cancel(){
+        this.flat = false;
         clearInterval(this.id);
     }
 }
@@ -155,7 +152,7 @@ var IFrame = {
     y: 0,
     components: [],
     width: window.screen.width,
-    height: window.screen.width,
+    height: window.screen.width ,
     canvas: document.getElementById('ICanvas'),
     graphics: null,
 };
@@ -228,12 +225,10 @@ IFrame.repaint = function (_component) {
             dg(_component.children[_index], _graphics);
         }
     };
-
     if (_component == this) {
         this.graphics.clearRect(0, 0, _component.width, _component.height);
         for (let _index = 0; _index < this.components.length; _index++) {
             dg(this.components[_index], this.graphics);
-
         }
         return;
     }
@@ -284,7 +279,6 @@ class IComponentBox{
     onmouseover (_onmouseover){
         for (let index = 0; index < this.array.length; index++) {
             this.array[index].addEventListener(this.array[index].onmouseover,_onmouseover);
-
         }
     }
     onmouseout (_onmouseout){
@@ -449,11 +443,12 @@ class IComponent {
 
 
 class ILable extends IComponent {
-    constructor(_x, _y, _width, _height, _text, _lineheight, _font = new IFont("bold", "1.2vw", "宋体"), _color = new IColor(0, 0, 0, 1)) {
+    constructor(_x, _y, _width, _height, _text, _lineheight, _font = new IFont("bolder", "1.0vw", "黑体"), _color = new IColor(0, 0, 0, 1),_align = "left") {
         super(_x, _y, _width, _height);
         this.tag = "ILable";
         this.text = _text;
         this.font = _font;
+        this.align = _align;
         this.color = _color;
         this.lineheight = _lineheight;
     }
@@ -463,8 +458,7 @@ class ILable extends IComponent {
         graphics.fillStyle = this.color.getColor();
         graphics.font = this.font.getFont();
         graphics.textBaseline = "top";
-        //graphics.fillText(this.text, this.x, this.y, this.width);
-
+        graphics.textAlign = this.align;
         var temp = "";
         var line = [];
         for (var index = 0; index < this.text.length; index++) {
@@ -475,7 +469,6 @@ class ILable extends IComponent {
             }
         }
         line.push(temp);
-
         for (var index = 0; index < line.length; index++) {
             graphics.fillText(line[index], this.x, this.y + (index + 1) * this.lineheight * this.height / 100, this.width);
         }
@@ -521,7 +514,7 @@ class ILink extends ILable {
 
 
 IPicture.set("背景", "./img/background.jpg")
-
+IPicture.set("习近平","./img/xjp.jpg")
 
 // window.onload = () => {
 //     var c1 = new ILink(5, 5, 50, 15, "       背景啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊", 20,"http://baidu.com");
