@@ -132,23 +132,25 @@ class IFont {
 }
 
 class IAnimation {
-    constructor(_component, _fun) {
-        if (_fun != undefined) {
+    constructor(_component) {
+        this.flat = false;
+    }
+
+    setanimation(_component, _fun){
+        this.cancel();
+        if (this.flat == false) {
             this.id = setInterval(() => {
                 _fun(_component, this);
                 _component.repaint();
             }, 20);
             this.flat = true;
-        }else{
-            this.flat = false;
         }
     }
     cancel() {
-        this.flat = false;
         clearInterval(this.id);
+        this.flat = false;
     }
 }
-
 
 var IFrame = {
     x: 0,
@@ -261,7 +263,7 @@ class IComponentBox {
     }
     animation(_animation) {
         for (let index = 0; index < this.array.length; index++) {
-            this.array[index].animation = _animation;
+            this.array[index].animation.setanimation(this.array[index],_animation);
         }
     }
     enabled(_enabled) {
@@ -313,7 +315,7 @@ class IComponent {
         this.borad = null;
         this.shadow = null;
 
-        this.animation = null;
+        this.animation = new IAnimation(this);
 
         this.enabled = true;
 
