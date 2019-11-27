@@ -75,7 +75,6 @@ IFrame.getComponentByTag("ILink").onmouseover((_component) => {
     _component.repaint();
 });
 
-
 IFrame.getComponentByTag("ILink").onmouseout((_component) => {
     _component.borad = new IBorad(0, 0, 0, 0);
     _component.repaint();
