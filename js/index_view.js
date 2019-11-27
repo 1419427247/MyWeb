@@ -18,7 +18,7 @@ nav.add(link4);
 nav.add(link5);
 
 var main = new IComponent(0, 5, 100, 120);
-main.shadow = new IShadow(new IColor(0,0,0,1),2,2,10);
+main.shadow = new IShadow(new IColor(0,0,0,0.3),0,1,20);
 
 main.borad = new IBorad(1, 0, 0, 1);
 main.borad.top_color = new IColor(255,128,128,1);
@@ -26,7 +26,7 @@ main.borad.top_color = new IColor(255,128,128,1);
 var box1 = new IComponent(0,1,60,40);
 
 var box1_picture = new IPicture(5,10,90,70, "习近平");
-box1_picture.shadow = new IShadow(new IColor(0,0,0,1),2,5,5);
+box1_picture.shadow = new IShadow(new IColor(0,0,0,0.3),0,1,20);
 box1_picture.addEventListener(box1_picture.onclick,()=>{
    window.location.href = "./news.html"; 
 });
@@ -39,9 +39,11 @@ box1.add(box1_lable);
 
 var box2 = new IComponent(60,1,40,40);
 
+var n_title = new ILable(10,0,20,10,"要闻",10);
+n_title.font = new IFont("bolder", "1.3em", "宋体");
 var box2_box = new IComponent(5,10,85,80);
-box2_box.borad = new IBorad(1,1,1,1);
-box2_box.shadow = new IShadow(new IColor(0,0,0,1),2,5,5);
+
+box2_box.borad = new IBorad(0,1,1,0);
 var box2_link1 = new ILink(5,5,85,8, " 不忘初心、牢记使命 主题教育的18个知识点",0);
 var box2_link2 = new ILink(5,20,85,8," 不忘初心、牢记使命 主题教育的19个要点",0);
 var box2_link3 = new ILink(5,35,85,8," 不忘初心、牢记使命 主题教育的3个方针",0);
@@ -56,7 +58,7 @@ for (let index = 0; index < links.length; index++) {
     links[index].color = new IColor(0,0,0,1);
     links[index].addEventListener(links[index].onmouseover, (_component) => {
         _component.animation.setanimation(links[index], (_component, _animation) => {
-            if (_component.backgroundcolor.green > 125) {
+            if (_component.backgroundcolor.green > 198) {
                 _component.backgroundcolor.green-=25;
                 _component.backgroundcolor.blue-=25;
             } else {
@@ -75,6 +77,8 @@ for (let index = 0; index < links.length; index++) {
         });
     });
 }
+
+box2.add(n_title);
 
 box2_box.add(box2_link1);
 box2_box.add(box2_link2);

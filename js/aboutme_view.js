@@ -24,7 +24,7 @@ main.borad.top_color = new IColor(255,128,128,1);
 var ILable1 = new ILable(0, 10, 100, 5, "被发现啦╰(￣ω￣ｏ)，还有这个网页bug太多了（；´д｀）ゞ，点我看被废弃的网页", 0);
 ILable1.color = new IColor(255, 255, 255, 1);
 
-var ILable2 = new ILable(0, 30, 100, 5, "太难了（＞人＜；）", 0);
+var ILable2 = new ILable(0, 30, 100, 5, "这个网页太难搞了（＞人＜；）", 0);
 
 
 main.add(ILable2);
