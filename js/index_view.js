@@ -18,12 +18,15 @@ nav.add(link4);
 nav.add(link5);
 
 var main = new IComponent(0, 5, 100, 120);
+main.shadow = new IShadow(new IColor(0,0,0,1),2,2,10);
+
 main.borad = new IBorad(1, 0, 0, 1);
 main.borad.top_color = new IColor(255,128,128,1);
 
 var box1 = new IComponent(0,1,60,40);
 
 var box1_picture = new IPicture(5,10,90,70, "习近平");
+box1_picture.shadow = new IShadow(new IColor(0,0,0,1),2,5,5);
 box1_picture.addEventListener(box1_picture.onclick,()=>{
    window.location.href = "./news.html"; 
 });
@@ -38,6 +41,7 @@ var box2 = new IComponent(60,1,40,40);
 
 var box2_box = new IComponent(5,10,85,80);
 box2_box.borad = new IBorad(1,1,1,1);
+box2_box.shadow = new IShadow(new IColor(0,0,0,1),2,5,5);
 var box2_link1 = new ILink(5,5,85,8, " 不忘初心、牢记使命 主题教育的18个知识点",0);
 var box2_link2 = new ILink(5,20,85,8," 不忘初心、牢记使命 主题教育的19个要点",0);
 var box2_link3 = new ILink(5,35,85,8," 不忘初心、牢记使命 主题教育的3个方针",0);
@@ -50,7 +54,6 @@ links = [box2_link1,box2_link2,box2_link3,box2_link4,box2_link5,box2_link6];
 for (let index = 0; index < links.length; index++) {
     links[index].font = new IFont("bolder", "0.8em", "宋体");
     links[index].color = new IColor(0,0,0,1);
-    links[index].shadow = new IShadow(new IColor(0,0,0,1),2,2,15);
     links[index].addEventListener(links[index].onmouseover, (_component) => {
         _component.animation.setanimation(links[index], (_component, _animation) => {
             if (_component.backgroundcolor.green > 125) {

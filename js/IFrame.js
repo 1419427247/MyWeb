@@ -348,6 +348,17 @@ class IComponent {
     }
 
     paint(_graphics) {
+        if(this.shadow != null){
+            _graphics.shadowColor = this.shadow.color.getColor();
+            _graphics.shadowOffsetX = this.shadow.offsetx;
+            _graphics.shadowOffsetY = this.shadow.offsety;
+            _graphics.shadowBlur = this.shadow.blur;
+        }else{
+            _graphics.shadowColor = "";
+            _graphics.shadowOffsetX = 0;
+            _graphics.shadowOffsetY = 0;
+            _graphics.shadowBlur = 0;
+        }
         if (this.backgroundcolor != null) {
             _graphics.fillStyle = this.backgroundcolor.getColor();
             _graphics.fillRect(this.x, this.y, this.width, this.height);
@@ -392,9 +403,6 @@ class IComponent {
                 _graphics.stroke();
             }
         }
-        if(this.shadow != null){
-
-        }
     }
 }
 
@@ -406,10 +414,8 @@ class IComponent {
 //         this.canvas.width = 0;
 //         this.canvas.height = 0;
 //         this.graphics = this.canvas.getContext('2d');
-
 //         document.body.appendChild(this.canvas);
 //     }  
-
 //     repaint(_component) {
 //         var dg = function (_component, _graphics) {
 //             if (!_component.enabled)
@@ -419,19 +425,16 @@ class IComponent {
 //                 dg(_component.children[_index], _graphics);
 //             }
 //         };
-
 //         if (_component == this) {
 //             this.graphics.clearRect(0, 0, _component.width, _component.height);
 //             for (let _index = 0; _index < this.components.length; _index++) {
 //                 dg(this.components[_index], this.graphics);
-
 //             }
 //             return;
 //         }
 //         this.graphics.clearRect(_component.x, _component.y, _component.width, _component.height);
 //         dg(_component, this.graphics);
 //     }
-
 //     paint() {
 //         console.log(this.canvas);
 //         if (this.canvas.width == 0) {
@@ -447,7 +450,6 @@ class IComponent {
 //         }
 //     }
 // }
-
 
 class ILable extends IComponent {
     constructor(_x, _y, _width, _height, _text, _lineheight, _font = new IFont("bolder", "1.0vw", "黑体"), _color = new IColor(0, 0, 0, 1), _align = "left") {
@@ -518,8 +520,6 @@ class ILink extends ILable {
     }
 }
 
-
-
 IPicture.set("背景", "./img/background.jpg")
 IPicture.set("习近平", "./img/xjp.jpg")
 
@@ -534,8 +534,6 @@ IPicture.set("习近平", "./img/xjp.jpg")
 //             _component.width++;
 //         });
 //     };
-
-
 //     c1.onmouseout = ()=>{
 
 //         c1.animation = new IAnimation(c1,(_component,_animation)=>{
@@ -546,21 +544,12 @@ IPicture.set("习近平", "./img/xjp.jpg")
 //         });
 //         IFrame.repaint(IFrame);
 //     }
-
-
-
 //     IFrame.add(c1);
 //     IFrame.add(new ILink(25,25,12,12,"QWQ",5,"QWQ"));
 
 //     IFrame.show();
 //     console.log(IFrame.getComponentByTag("ILink"));
 // }
-
-
-
-
-
-
 // class Lable extends Component {
 //     constructor(_x, _y, _width, _height, _text ) {
 //         super(_x, _y, _width, _height);
