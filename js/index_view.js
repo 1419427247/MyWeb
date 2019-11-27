@@ -19,7 +19,7 @@ nav.add(link5);
 
 var main = new IComponent(0, 5, 100, 120);
 main.borad = new IBorad(1, 0, 0, 1);
-
+main.borad.top_color = new IColor(255,128,128,1);
 
 var box1 = new IComponent(0,1,60,40);
 

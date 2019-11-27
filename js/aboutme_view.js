@@ -18,7 +18,8 @@ nav.add(link4);
 nav.add(link5);
 
 var main = new IComponent(0, 5, 100, 120);
-main.borad = new IBorad(1, 0, 0, 0);
+main.borad = new IBorad(1, 0, 0, 1);
+main.borad.top_color = new IColor(255,128,128,1);
 
 var ILable1 = new ILable(0, 10, 100, 5, "被发现啦╰(￣ω￣ｏ)，还有这个网页bug太多了（；´д｀）ゞ，点我看被废弃的网页", 0);
 ILable1.color = new IColor(255, 255, 255, 1);

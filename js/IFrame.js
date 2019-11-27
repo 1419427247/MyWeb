@@ -13,7 +13,7 @@ IEvent.onClick = function (event) {
         if (mpos[0] > component.x && mpos[0] < component.x + component.width && mpos[1] > component.y && mpos[1] < component.y + component.height) {
             for (let index = 0; index < component.onclick.length; index++) {
                 component.onclick[index](component);
-                
+
             }
             return true;
         }
@@ -36,7 +36,7 @@ IEvent.onMouseMove = function () {
         }
         if (mpos[0] > component.x && mpos[0] < component.x + component.width && mpos[1] > component.y && mpos[1] < component.y + component.height) {
             if (component != IEvent.mouseComponent) {
-                if (IEvent.mouseComponent != null){
+                if (IEvent.mouseComponent != null) {
                     for (let index = 0; index < IEvent.mouseComponent.onmouseout.length; index++) {
                         IEvent.mouseComponent.onmouseout[index](IEvent.mouseComponent);
                     }
@@ -60,7 +60,7 @@ IEvent.onMouseMove = function () {
             return;
     }
     if (!flat) {
-        if (IEvent.mouseComponent != null){
+        if (IEvent.mouseComponent != null) {
             for (let index = 0; index < IEvent.mouseComponent.onmouseout.length; index++) {
                 IEvent.mouseComponent.onmouseout[index](IEvent.mouseComponent);
             }
@@ -108,15 +108,15 @@ class IShadow {
 }
 
 class IBorad {
-    constructor(_top,_left,_right,_bottom) {
+    constructor(_top, _left, _right, _bottom) {
         this.top = _top || 0;
-        this.top_color = new IColor(0,0,0,1);
+        this.top_color = new IColor(0, 0, 0, 1);
         this.left = _left || 0;
-        this.left_color = new IColor(0,0,0,1);
+        this.left_color = new IColor(0, 0, 0, 1);
         this.right = _right || 0;
-        this.right_color = new IColor(0,0,0,1);
+        this.right_color = new IColor(0, 0, 0, 1);
         this.bottom = _bottom || 0;
-        this.bottom_color = new IColor(0,0,0,1);
+        this.bottom_color = new IColor(0, 0, 0, 1);
     }
 }
 
@@ -131,16 +131,19 @@ class IFont {
     }
 }
 
-class IAnimation{
-    constructor(_component,_fun){
-        this.id = setInterval(()=>{ 
-            _fun(_component,this);
-            _component.repaint();
+class IAnimation {
+    constructor(_component, _fun) {
+        if (_fun != undefined) {
+            this.id = setInterval(() => {
+                _fun(_component, this);
+                _component.repaint();
+            }, 20);
+            this.flat = true;
+        }else{
+            this.flat = false;
         }
-        , 20);
-        this.flat = true;
     }
-    cancel(){
+    cancel() {
         this.flat = false;
         clearInterval(this.id);
     }
@@ -152,7 +155,7 @@ var IFrame = {
     y: 0,
     components: [],
     width: window.screen.width,
-    height: window.screen.width ,
+    height: window.screen.width,
     canvas: document.getElementById('ICanvas'),
     graphics: null,
 };
@@ -169,9 +172,9 @@ IFrame.add = function (_component) {
     this.components.push(_component);
 };
 
-IFrame.getComponentById = function(_id) {
+IFrame.getComponentById = function (_id) {
     var dg = function (_component) {
-        if(_component.id = _id)
+        if (_component.id = _id)
             return _component;
         for (let _index = 0; _index < _component.children.length; _index++) {
             dg(_component.children[_index]);
@@ -182,10 +185,10 @@ IFrame.getComponentById = function(_id) {
     }
 }
 
-IFrame.getComponentByTag = function(_tag) {
+IFrame.getComponentByTag = function (_tag) {
     var box = new IComponentBox();
     var dg = function (_component) {
-        if(_component.tag == _tag)
+        if (_component.tag == _tag)
             box.array.push(_component);
         for (let _index = 0; _index < _component.children.length; _index++) {
             dg(_component.children[_index]);
@@ -236,58 +239,58 @@ IFrame.repaint = function (_component) {
     dg(_component, this.graphics);
 }
 
-class IComponentBox{
-    constructor(){
+class IComponentBox {
+    constructor() {
         this.array = [];
     }
 
-    backgroundcolor(_backgroundcolor){
+    backgroundcolor(_backgroundcolor) {
         for (let index = 0; index < this.array.length; index++) {
             this.array[index].backgroundcolor = _backgroundcolor;
         }
     }
-    borad (_borad){
+    borad(_borad) {
         for (let index = 0; index < this.array.length; index++) {
             this.array[index].borad = _borad;
         }
     }
-    shadow (_shadow){
+    shadow(_shadow) {
         for (let index = 0; index < this.array.length; index++) {
             this.array[index].shadow = _shadows;
         }
     }
-    animation (_animation){
+    animation(_animation) {
         for (let index = 0; index < this.array.length; index++) {
             this.array[index].animation = _animation;
         }
     }
-    enabled (_enabled){
+    enabled(_enabled) {
         for (let index = 0; index < this.array.length; index++) {
             this.array[index].enabled = _enabled;
         }
     }
-    onclick (_onclick){
+    onclick(_onclick) {
         for (let index = 0; index < this.array.length; index++) {
-            this.array[index].addEventListener(this.array[index].onclick,_onclick);
+            this.array[index].addEventListener(this.array[index].onclick, _onclick);
         }
     }
-    onmousemove (_onmousemove){
+    onmousemove(_onmousemove) {
         for (let index = 0; index < this.array.length; index++) {
-            this.array[index].addEventListener(this.array[index].onmousemove,_onmousemove);
+            this.array[index].addEventListener(this.array[index].onmousemove, _onmousemove);
         }
     }
-    onmouseover (_onmouseover){
+    onmouseover(_onmouseover) {
         for (let index = 0; index < this.array.length; index++) {
-            this.array[index].addEventListener(this.array[index].onmouseover,_onmouseover);
+            this.array[index].addEventListener(this.array[index].onmouseover, _onmouseover);
         }
     }
-    onmouseout (_onmouseout){
+    onmouseout(_onmouseout) {
         for (let index = 0; index < this.array.length; index++) {
-            this.array[index].addEventListener(this.array[index].onmouseout,_onmouseout);
+            this.array[index].addEventListener(this.array[index].onmouseout, _onmouseout);
         }
     }
 
-    font(_font){
+    font(_font) {
         for (let index = 0; index < this.array.length; index++) {
             this.array[index].font = _font;
         }
@@ -306,7 +309,7 @@ class IComponent {
         this.width = _width;
         this.height = _height;
 
-        this.backgroundcolor = new IColor(255,255,255,1);
+        this.backgroundcolor = new IColor(255, 255, 255, 1);
         this.borad = null;
         this.shadow = null;
 
@@ -331,7 +334,7 @@ class IComponent {
         this.children.push(_component);
     }
 
-    addEventListener(_type,_fun){
+    addEventListener(_type, _fun) {
         _type.push(_fun);
     }
 
@@ -349,42 +352,42 @@ class IComponent {
             _graphics.fillRect(this.x, this.y, this.width, this.height);
         }
         if (this.borad != null) {
-            _graphics.lineJoin="round";
-            if(this.borad.left > 0){
+            _graphics.lineJoin = "round";
+            if (this.borad.left > 0) {
                 _graphics.beginPath();
                 _graphics.lineWidth = this.borad.left;
                 _graphics.strokeStyle = this.borad.left_color.getColor();
 
-                _graphics.moveTo(this.x + this.borad.left / 2,this.y);
-                _graphics.lineTo(this.x + this.borad.left / 2,this.y + this.height);
+                _graphics.moveTo(this.x + this.borad.left / 2, this.y);
+                _graphics.lineTo(this.x + this.borad.left / 2, this.y + this.height);
                 _graphics.stroke();
 
             }
-            if(this.borad.right > 0){
+            if (this.borad.right > 0) {
                 _graphics.beginPath();
                 _graphics.lineWidth = this.borad.right;
                 _graphics.strokeStyle = this.borad.right_color.getColor();
 
-                _graphics.moveTo(this.x + this.width - this.borad.right/2,this.y);
-                _graphics.lineTo(this.x + this.width- this.borad.right/2,this.y + this.height);
+                _graphics.moveTo(this.x + this.width - this.borad.right / 2, this.y);
+                _graphics.lineTo(this.x + this.width - this.borad.right / 2, this.y + this.height);
                 _graphics.stroke();
             }
-            if(this.borad.top > 0){
+            if (this.borad.top > 0) {
                 _graphics.lineWidth = this.borad.top;
                 _graphics.strokeStyle = this.borad.top_color.getColor();
 
                 _graphics.beginPath();
-                _graphics.moveTo(this.x,this.y + this.borad.top / 2);
-                _graphics.lineTo(this.x + this.width,this.y + this.borad.top / 2);
+                _graphics.moveTo(this.x, this.y + this.borad.top / 2);
+                _graphics.lineTo(this.x + this.width, this.y + this.borad.top / 2);
                 _graphics.stroke();
             }
-            if(this.borad.bottom > 0){
+            if (this.borad.bottom > 0) {
                 _graphics.beginPath();
                 _graphics.lineWidth = this.borad.bottom;
                 _graphics.strokeStyle = this.borad.bottom_color.getColor();
 
-                _graphics.moveTo(this.x,this.y + this.height - this.borad.bottom/2);
-                _graphics.lineTo(this.x + this.width,this.y + this.height - this.borad.bottom/2);
+                _graphics.moveTo(this.x, this.y + this.height - this.borad.bottom / 2);
+                _graphics.lineTo(this.x + this.width, this.y + this.height - this.borad.bottom / 2);
                 _graphics.stroke();
             }
         }
@@ -412,12 +415,12 @@ class IComponent {
 //                 dg(_component.children[_index], _graphics);
 //             }
 //         };
-    
+
 //         if (_component == this) {
 //             this.graphics.clearRect(0, 0, _component.width, _component.height);
 //             for (let _index = 0; _index < this.components.length; _index++) {
 //                 dg(this.components[_index], this.graphics);
-    
+
 //             }
 //             return;
 //         }
@@ -443,7 +446,7 @@ class IComponent {
 
 
 class ILable extends IComponent {
-    constructor(_x, _y, _width, _height, _text, _lineheight, _font = new IFont("bolder", "1.0vw", "黑体"), _color = new IColor(0, 0, 0, 1),_align = "left") {
+    constructor(_x, _y, _width, _height, _text, _lineheight, _font = new IFont("bolder", "1.0vw", "黑体"), _color = new IColor(0, 0, 0, 1), _align = "left") {
         super(_x, _y, _width, _height);
         this.tag = "ILable";
         this.text = _text;
@@ -500,12 +503,12 @@ IPicture.get = function (_name) {
 }
 
 class ILink extends ILable {
-    constructor(_x, _y, _width, _height, _text, _lineheight,_src = "#") {
+    constructor(_x, _y, _width, _height, _text, _lineheight, _src = "#") {
         super(_x, _y, _width, _height, _text, _lineheight);
         this.tag = "ILink";
         this.src = _src;
         this.color = new IColor(225, 0, 0, 1);
-        this.addEventListener(this.onclick,()=> {
+        this.addEventListener(this.onclick, () => {
             window.location.href = this.src;
         });
     }
@@ -514,7 +517,7 @@ class ILink extends ILable {
 
 
 IPicture.set("背景", "./img/background.jpg")
-IPicture.set("习近平","./img/xjp.jpg")
+IPicture.set("习近平", "./img/xjp.jpg")
 
 // window.onload = () => {
 //     var c1 = new ILink(5, 5, 50, 15, "       背景啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊", 20,"http://baidu.com");
