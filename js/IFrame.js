@@ -99,11 +99,11 @@ class IColor {
 }
 
 class IShadow {
-    constructor(_color, _offx, _offy, _blue) {
-        this.color = _color.getColor();
-        this.offsetx = _oofx;
-        this.offsety = _oofy;
-        this.blur = _blue;
+    constructor(_color, _offx, _offy, _blur) {
+        this.color = _color;
+        this.offsetx = _offx;
+        this.offsety = _offy;
+        this.blur = _blur;
     }
 }
 
@@ -328,7 +328,6 @@ class IComponent {
         this.memory = {};
         this.parent = null;
         this.children = [];
-
     }
 
     add(_component) {
@@ -392,6 +391,9 @@ class IComponent {
                 _graphics.lineTo(this.x + this.width, this.y + this.height - this.borad.bottom / 2);
                 _graphics.stroke();
             }
+        }
+        if(this.shadow != null){
+
         }
     }
 }

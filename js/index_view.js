@@ -37,18 +37,20 @@ box1.add(box1_lable);
 var box2 = new IComponent(60,1,40,40);
 
 var box2_box = new IComponent(5,10,85,80);
-box2_box.borad = new IBorad(0,1,1,0);
-var box2_link1 = new ILink(5,10,85,10," 不忘初心、牢记使命 主题教育的18个知识点",0);
-var box2_link2 = new ILink(5,20,85,10," 不忘初心、牢记使命 主题教育的19个要点",0);
-var box2_link3 = new ILink(5,30,85,10," 不忘初心、牢记使命 主题教育的3个方针",0);
-var box2_link4 = new ILink(5,40,85,10," 不忘初心、牢记使命 主题教育的6个要求",0);
-var box2_link5 = new ILink(5,50,85,10," 不忘初心、牢记使命 主题教育的12个知识点",0);
-var box2_link6 = new ILink(5,60,85,10," 不忘初心、牢记使命 主题教育的8个知识点",0);
-var box2_link7 = new ILink(5,70,85,10," 不忘初心、牢记使命 主题教育的5个知识点",0);
+box2_box.borad = new IBorad(1,1,1,1);
+var box2_link1 = new ILink(5,5,85,8, " 不忘初心、牢记使命 主题教育的18个知识点",0);
+var box2_link2 = new ILink(5,20,85,8," 不忘初心、牢记使命 主题教育的19个要点",0);
+var box2_link3 = new ILink(5,35,85,8," 不忘初心、牢记使命 主题教育的3个方针",0);
+var box2_link4 = new ILink(5,50,85,8," 不忘初心、牢记使命 主题教育的6个要求",0);
+var box2_link5 = new ILink(5,65,85,8," 不忘初心、牢记使命 主题教育的12个知识点",0);
+var box2_link6 = new ILink(5,80,85,8," 不忘初心、牢记使命 主题教育的8个知识点",0);
 
-links = [box2_link1,box2_link2,box2_link3,box2_link4,box2_link5,box2_link6,box2_link7];
+links = [box2_link1,box2_link2,box2_link3,box2_link4,box2_link5,box2_link6];
 
 for (let index = 0; index < links.length; index++) {
+    links[index].font = new IFont("bolder", "0.8em", "宋体");
+    links[index].color = new IColor(0,0,0,1);
+    links[index].shadow = new IShadow(new IColor(0,0,0,1),2,2,15);
     links[index].addEventListener(links[index].onmouseover, (_component) => {
         _component.animation.setanimation(links[index], (_component, _animation) => {
             if (_component.backgroundcolor.green > 125) {
@@ -69,9 +71,6 @@ for (let index = 0; index < links.length; index++) {
             }
         });
     });
-    links[index].font = new IFont("bolder", "0.8em", "宋体");
-    links[index].color = new IColor(0,0,0,1);
-
 }
 
 box2_box.add(box2_link1);
@@ -80,7 +79,6 @@ box2_box.add(box2_link3);
 box2_box.add(box2_link4);
 box2_box.add(box2_link5);
 box2_box.add(box2_link6);
-box2_box.add(box2_link7);
 
 box2.add(box2_box);
 
