@@ -25,29 +25,29 @@ var title = new ILable(5, 5, 80, 5, "习近平在“不忘初心、牢记使命�
 title.font = new IFont("bolder", "2.0vw", "黑体");
 
 
-title.addEventListener(title.onmouseover, (_component) => {
-    _component.animation.setanimation(title, (_component, _animation) => {
-        if (_component.backgroundcolor.red > 125) {
-            _component.backgroundcolor.red-=25;
-            _component.backgroundcolor.green-=25;
-            _component.backgroundcolor.blue-=25;
-        } else {
-            _animation.cancel();
-        }
-    });
-})
+// title.addEventListener(title.onmouseover, (_component) => {
+//     _component.animation.setanimation(title, (_component, _animation) => {
+//         if (_component.backgroundcolor.red > 125) {
+//             _component.backgroundcolor.red-=25;
+//             _component.backgroundcolor.green-=25;
+//             _component.backgroundcolor.blue-=25;
+//         } else {
+//             _animation.cancel();
+//         }
+//     });
+// })
 
-title.addEventListener(title.onmouseout, (_component) => {
-    _component.animation.setanimation(title, (_component, _animation) => {
-        if (_component.backgroundcolor.red < 255) {
-            _component.backgroundcolor.red+=25;
-            _component.backgroundcolor.green+=25;
-            _component.backgroundcolor.blue+=25;
-        } else {
-            _animation.cancel();
-        }
-    });
-})
+// title.addEventListener(title.onmouseout, (_component) => {
+//     _component.animation.setanimation(title, (_component, _animation) => {
+//         if (_component.backgroundcolor.red < 255) {
+//             _component.backgroundcolor.red+=25;
+//             _component.backgroundcolor.green+=25;
+//             _component.backgroundcolor.blue+=25;
+//         } else {
+//             _animation.cancel();
+//         }
+//     });
+// })
 
 
 

@@ -58,9 +58,9 @@ for (let index = 0; index < links.length; index++) {
     links[index].color = new IColor(0,0,0,1);
     links[index].addEventListener(links[index].onmouseover, (_component) => {
         _component.animation.setanimation(links[index], (_component, _animation) => {
-            if (_component.backgroundcolor.green > 198) {
-                _component.backgroundcolor.green-=25;
-                _component.backgroundcolor.blue-=25;
+            if (_component.backgroundcolor.green > 235) {
+                _component.backgroundcolor.green-=5;
+                _component.backgroundcolor.blue-=5;
             } else {
                 _animation.cancel();
             }
@@ -69,8 +69,8 @@ for (let index = 0; index < links.length; index++) {
     links[index].addEventListener(links[index].onmouseout, (_component) => {
         _component.animation.setanimation(links[index], (_component, _animation) => {
             if (_component.backgroundcolor.green < 255) {
-                _component.backgroundcolor.green += 25;
-                _component.backgroundcolor.blue += 25;
+                _component.backgroundcolor.green += 15;
+                _component.backgroundcolor.blue += 15;
             } else {
                 _animation.cancel();
             }
